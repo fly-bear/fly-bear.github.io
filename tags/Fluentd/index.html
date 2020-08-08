@@ -54,13 +54,13 @@
     </div>
     <div class="contents" id="nav-content">
         <ul>
-            <li  class=active >
+            <li >
                 <a href="/">
                     <i class="iconfont icon-shouye1"></i>
                     <span>主页</span>
                 </a>
             </li>
-            <li >
+            <li  class=active >
                 <a href="/tags">
                     <i class="iconfont icon-biaoqian1"></i>
                     <span>标签</span>
@@ -113,111 +113,93 @@
     <div class="index-middle">
         <!-- Main Content -->
         
-<div class="post-preview-container" style="min-height: 720px">
-    
-    <div class="post-preview">
-        <div class="post-time">2020-01-10</div>
-        <div class="post-info">
+
+
+<!-- 归档列表 -->
+
+<div class="archives-container">
+
+<div class="one-tag-list">
+                <span class="fa fa-calendar-times-o listing-seperator" id="2020">
+                    <span class="tag-text">2020</span>
+                </span>
+    <ul>
+        
+        <!-- <li class="listing-item">
+        <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+        <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+        </li> -->
+        <li >
+            <span>01-10</span>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
             <a href="/2020/01/10/数据库调优/">
-                <h3>
-                    数据库调优
-                </h3>
+                        <span>
+                            数据库调优
+                        </span>
             </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#数据库" title="数据库">数据库</a>
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#MySQL" title="MySQL">MySQL</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2019-09-08</div>
-        <div class="post-info">
-            <a href="/2019/09/08/database/">
-                <h3>
-                    日志系统搭建
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#ELK" title="ELK">ELK</a>
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#Filebeat" title="Filebeat">Filebeat</a>
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#Fluentd" title="Fluentd">Fluentd</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2019-08-15</div>
-        <div class="post-info">
-            <a href="/2019/08/15/replace-if/">
-                <h3>
-                    在 Java 中替换大量 if-else 分支的方法
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#Java" title="Java">Java</a>
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#代码风格" title="代码风格">代码风格</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2019-07-19</div>
-        <div class="post-info">
-            <a href="/2019/07/19/解决-jpa-的-save-过程用-null-值覆盖数据库有效值的问题/">
-                <h3>
-                    解决 jpa 的 save 过程用 null 值覆盖数据库有效值的问题
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#Java" title="Java">Java</a>
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#jpa" title="jpa">jpa</a>
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#postgreSQL" title="postgreSQL">postgreSQL</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
+            <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+        </li>
+        
+
+    </ul>
 </div>
-<ul class="pager">
-    
-    
-</ul>
+
+<div class="one-tag-list">
+                <span class="fa fa-calendar-times-o listing-seperator" id="2019">
+                    <span class="tag-text">2019</span>
+                </span>
+    <ul>
+        
+        <!-- <li class="listing-item">
+        <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+        <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+        </li> -->
+        <li >
+            <span>09-08</span>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            <a href="/2019/09/08/database/">
+                        <span>
+                            日志系统搭建
+                        </span>
+            </a>
+            <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+        </li>
+        
+        <!-- <li class="listing-item">
+        <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+        <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+        </li> -->
+        <li >
+            <span>08-15</span>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            <a href="/2019/08/15/replace-if/">
+                        <span>
+                            在 Java 中替换大量 if-else 分支的方法
+                        </span>
+            </a>
+            <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+        </li>
+        
+        <!-- <li class="listing-item">
+        <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+        <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+        </li> -->
+        <li >
+            <span>07-19</span>
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+            <a href="/2019/07/19/解决-jpa-的-save-过程用-null-值覆盖数据库有效值的问题/">
+                        <span>
+                            解决 jpa 的 save 过程用 null 值覆盖数据库有效值的问题
+                        </span>
+            </a>
+            <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+        </li>
+        
+
+    </ul>
+</div>
+
+</div>
 
     </div>
 </div>
