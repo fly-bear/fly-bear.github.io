@@ -121,7 +121,7 @@ live2d:
     use: live2d-widget-model-miku
   display:
     position: left
-    width: 150
-    height: 300
+    width: 230
+    height: 460
   mobile:
     show: true
