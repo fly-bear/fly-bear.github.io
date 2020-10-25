@@ -36,7 +36,7 @@ keyword: ""
 sidebar-avatar: photo.jpg
 
 # 社交平台
-zhihu_username: ldzx-62-66
+zhihu_username: qing-meng-xing-he-72-55
 github_username: fly-bear
 
 # 搜索设置
@@ -108,3 +108,20 @@ deploy:
   repo: git@github.com:fly-bear/fly-bear.github.io.git
   branch: master
   message: published by hexo on {{now('YYYY-MM-DD HH:mm:ss')}}
+  
+live2d:
+  enable: true
+  scriptFrom: local
+  pluginRootPath: live2dw/
+  pluginJsPath: lib/
+  pluginModelPath: assets/
+  tagMode: false
+  debug: false
+  model:
+    use: live2d-widget-model-miku
+  display:
+    position: left
+    width: 150
+    height: 300
+  mobile:
+    show: true
