@@ -90,7 +90,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题背景"><span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自己动手"><span class="toc-text">自己动手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#现成工具类"><span class="toc-text">现成工具类</span></a></li></ol>
 </div>
     
 </div>
@@ -145,17 +145,23 @@
 </span>
     </div>
     <div class="post-content ">
-        <p>最近在项目中使用 jpa 操作数据库的时候，遇到了一个问题。</p>
+        <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>最近在项目中使用 jpa 操作数据库的时候，遇到了一个问题。</p>
 <p>我所使用的数据库是 postgreSQL，通过定义实体类添加<code>@Table</code>注解指定表，定义接口继承<code>CrudRepository</code>类，将实体类作为参数传入，即可调用默认的 save 方法，jpa 会根据主键将实体进行插入或更新操作。</p>
 <p>但是，如果用于更新的实体中含有未赋值的属性，即值为 null 的情况时，数据库中对应字段的值会被 null 覆盖。</p>
 <p>我先是在 Google 查询了解决方案，有网友提出可以在实体类加上<code>@DynamicUpdate</code>和<code>@DynamicInsert</code>两个注解，序列化时即可忽略为 null 的值。我尝试了这种方法，启动单元测试进行了一次更新操作，却发现数据库的数据依然被 null 覆盖。</p>
 <p>为了寻找原因，我查看了这两个注解的源码，它们是在 hebernate-core 里定义的。使用 idea 的全局搜索找到了注解的实现代码,还没来得及看具体实现，却发现它被加上了<code>@Deprecated</code>注解。虽然理论上对使用是无影响的，但既然作者不推荐了，还是放弃使用吧。</p>
-<p>实在不想在苦苦寻找方法了，决定自己造个轮子，实现 update 的功能。逻辑非常简单，每次 save 之前先从数据库查找出对应数据存入实体A，将含有更新数据的实体B中的非空属性赋值给实体A，最后用实体 A 存回数据库。具体代码如下：</p>
+<h2 id="自己动手"><a href="#自己动手" class="headerlink" title="自己动手"></a>自己动手</h2><p>实在不想在苦苦寻找方法了，决定自己造个轮子，实现 update 的功能。逻辑非常简单，每次 save 之前先从数据库查找出对应数据存入实体A，将含有更新数据的实体B中的非空属性赋值给实体A，最后用实体 A 存回数据库。具体代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 防止 jpa 将为 null 的属性更新（因为注解DynamicUpdate无效）</span><br><span class="line">    *</span><br><span class="line">    * @param entity 包含需要更新字段的实体</span><br><span class="line">    * @param oldEntity 从数据库获取的旧实体</span><br><span class="line">    * @return 最终往数据库插入的实体</span><br><span class="line">    */</span><br><span class="line">    </span><br><span class="line">   public static &lt;T&gt; T updateEntity(T entity,T oldEntity)&#123;</span><br><span class="line">       Class clazz = entity.getClass();</span><br><span class="line">       Field[] fields = clazz.getDeclaredFields();</span><br><span class="line">       for (Field field : fields)&#123;</span><br><span class="line">           try &#123;</span><br><span class="line">               PropertyDescriptor pd = new PropertyDescriptor(field.getName(), clazz);</span><br><span class="line">               Method readMethod = pd.getReadMethod();</span><br><span class="line">               Method writeMethod= pd.getWriteMethod();</span><br><span class="line">               if (readMethod.invoke(entity)!=null)&#123;   //不为null 的覆盖</span><br><span class="line">                   writeMethod.invoke(oldEntity,readMethod.invoke(entity));</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;catch (Exception e)&#123;</span><br><span class="line">               log.error(e.getMessage());</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       return oldEntity;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 
 <p>利用反射+泛型写了个通用方法，将新旧实体作为参数传入，反射取出新实体中非 null 的值赋给旧实体，最后将旧实体返回。将方法封装成工具类方便调用。</p>
 <p>在代码中，每次更新数据库前调用一下工具，用返回的实体作为 save 对象，经测试，成功解决 null 覆盖问题。</p>
+<h2 id="现成工具类"><a href="#现成工具类" class="headerlink" title="现成工具类"></a>现成工具类</h2><p>实际上，通过寻找，我确实发现了现成的工具。</p>
+<p>大家都知道 <code>BeanUtil</code> 类的 <code>copyProperties</code> 方法可以拷贝两个实体的同名变量，而通过控制传入参数，就可以实现只拷贝非空属性。</p>
+<p><code>BeanUtil</code> 中有个 <code>getNullPropertyNames</code> 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public static String[] getNullPropertyNames (Object source) &#123;</span><br><span class="line">	final BeanWrapper src = new BeanWrapperImpl(source);</span><br><span class="line">	java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();</span><br><span class="line"></span><br><span class="line">	Set&lt;String&gt; emptyNames = new HashSet&lt;String&gt;();</span><br><span class="line">	for(java.beans.PropertyDescriptor pd : pds) &#123;</span><br><span class="line">		Object srcValue = src.getPropertyValue(pd.getName());</span><br><span class="line">		if (srcValue == null) emptyNames.add(pd.getName());</span><br><span class="line">	&#125;</span><br><span class="line">	String[] result = new String[emptyNames.size()];</span><br><span class="line">	return emptyNames.toArray(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>此方法返回实体的所有非 null 字段，将其作为参数传入 <code>copyProperties</code> ，即可实现指定复制。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	public void update(ClassA source, Integer id )&#123;</span><br><span class="line">		ClassA target = classDao.findById(id);  </span><br><span class="line">		BeanUtils.copyProperties(source,target,getNullPropertyNames(source)); </span><br><span class="line">		classDao.update(target );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         
         <br />
         <div id="comment-container">
