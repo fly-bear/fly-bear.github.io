@@ -118,10 +118,14 @@ live2d:
   tagMode: false
   debug: false
   model:
-    use: live2d-widget-model-miku
+    use: sakura
   display:
-    position: left
-    width: 230
-    height: 460
+    position: right
+    width: 300
+    height: 600
+    right: -20
+    bottom: -100
+    hOffset: -40
+    vOffset: -100
   mobile:
     show: true
