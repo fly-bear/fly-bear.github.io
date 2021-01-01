@@ -42,7 +42,7 @@ public void method(String type){
 
 ### 简单描述
 
-关于函数式编程的定义和本质，这个问题太复杂了，我只能以自己的理解做一些粗浅的描述。
+关于函数式编程的定义和本质，这个问题比较复杂，在这我以自己的理解做一些粗浅的描述。
 
 所谓**函数式编程**（functional programming）指的是一种**编程范式**（programming paradigm），是编程的方法论，例如面向对象编程就是**命令式编程**（Imperative programming）的一种。
 

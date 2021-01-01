@@ -33,7 +33,7 @@ filebeat.inputs:
     - /home/ubuntu/logs/app.log
   fields:
     type: app
-    business: backoffice-api
+    business: my-project
   fields_under_root: true
   multiline.pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
   multiline.negate: true
@@ -46,12 +46,12 @@ filebeat.inputs:
     - /home/ubuntu/logs/access/access.log
   fields:
       type: access
-      business: backoffice-api
+      business: my-project
   fields_under_root: true
   
 #---------------------- Logstash output --------------------------
 output.logstash:
-  hosts: ["logstash-prod.truckerpath.com:5044"]
+  hosts: ["logstash-prod.flybear.com:5044"]
 ```
 
 #### 多行合并
@@ -102,8 +102,8 @@ output {
 <source>
   @type tail
   @id mongodb-prod1
-  path /logs/logstash/mongodb-prod1-app-*.log
-  pos_file /tmp/mongodb-prod1.pos
+  path /logs/logstash/my-project-app-*.log
+  pos_file /tmp/my-project.pos
   refresh_interval 30
   tag mongodb-prod1
   path_key log_path
@@ -120,7 +120,7 @@ output {
 #### 配置输出
 
 ```
-<match nginx_access_error nginx_access_normal tpnewapi_app backoffice_access backoffice_app job_executor_app  tpnewapi_data.** job_executor_data.**>
+<match my-project my-project2>
 @type elasticsearch
 @id elasticsearch_output
   host 172.31.26.211
