@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        使用 Consul+Fabio+Registrator 部署集群 - 清梦 |  Dreaming
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<!-- 用于存放Live2d的元素，可自定义 -->
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <h1> 清梦 </h1>
+    <i> 很惭愧，做了点微不足道的贡献 </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar radius">
+            <img src="/photo.jpg" />
+        </div>
+        <div class="name">
+            <i>莫星河</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-Consul-Fabio-Registrator-部署集群"><span class="toc-text">使用 Consul+Fabio+Registrator 部署集群</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#整体结构"><span class="toc-text">整体结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#集群部署"><span class="toc-text">集群部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-节点负载均衡"><span class="toc-text">Node 节点负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-反向代理"><span class="toc-text">Nginx 反向代理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#项目实例"><span class="toc-text">项目实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#consul-server-部署"><span class="toc-text">consul server 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#consul-client-部署"><span class="toc-text">consul client 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Registrator-部署"><span class="toc-text">Registrator 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fabio-部署"><span class="toc-text">Fabio 部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务部署"><span class="toc-text">服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-配置"><span class="toc-text">Nginx 配置</span></a></li></ol></li></ol></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+
+        <div class="index-about-mobile">
+            <i> 很惭愧，做了点微不足道的贡献 </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        使用 Consul+Fabio+Registrator 部署集群
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2020-07-12 13:25:33</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#集群部署" title="集群部署">集群部署</a>
+        <span>/</span>
+        
+        <a class="tag" href="/tags/#服务架构" title="服务架构">服务架构</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h1 id="使用-Consul-Fabio-Registrator-部署集群"><a href="#使用-Consul-Fabio-Registrator-部署集群" class="headerlink" title="使用 Consul+Fabio+Registrator 部署集群"></a>使用 Consul+Fabio+Registrator 部署集群</h1><h2 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h2><h3 id="集群部署"><a href="#集群部署" class="headerlink" title="集群部署"></a>集群部署</h3><p>使用 Consul 做服务发现，在中心服务器部署 consul server，各服务器部署 client、 Fabio 和 registrator，将服务自动注册到consul。服务启动时可以向 docker 传递环境变量，设置自己在 consul 的 name 和 tag 等。</p>
+<p>使用 Fabio 做负载均衡，从 Consul 注册表读取健康的服务，配置自己的 route 表，根据配置的权重做负载均衡。Fabio 根据 consul tags 的格式可以配置 strip，切分请求 URL，再将流量传递到相应服务。</p>
+<p>使用 Fabio 的优点是一个服务调用其它服务时无需关心 consul 集群的位置，只需知道服务名，然后调用本地 4666 端口，由 Fabio 转发到对应服务。另外一个好处是不需要手动配置路由表，更改服务也无需重启 Fabio。</p>
+<h3 id="Node-节点负载均衡"><a href="#Node-节点负载均衡" class="headerlink" title="Node 节点负载均衡"></a>Node 节点负载均衡</h3><p>服务部署在 AWS Ec2 云服务上，将其中几台作为 node 节点部署 Fabio 和 Consul server，总流量通过 AWS 提供的弹性负载均衡器（Elastic Load Balance，ELB）分发到不同 node。</p>
+<h3 id="Nginx-反向代理"><a href="#Nginx-反向代理" class="headerlink" title="Nginx 反向代理"></a>Nginx 反向代理</h3><p>域名解析指向 node 集群，在 node 上使用 nginx 做反向代理，根据请求的 URL 将流量分发到 Fabio 或者直接到服务，控制访问权限。</p>
+<h2 id="项目实例"><a href="#项目实例" class="headerlink" title="项目实例"></a>项目实例</h2><h3 id="consul-server-部署"><a href="#consul-server-部署" class="headerlink" title="consul server 部署"></a>consul server 部署</h3><p>单独选择一台或多台稳定的服务器部署 consul server， 例中用了 10.2.26.83</p>
+<p>在<code>/etc/consul_server/</code>目录下创建配置文件 basic_config.json，写入配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;skip_leave_on_interrupt&quot;: true,</span><br><span class="line">  &quot;bind_addr&quot;: &quot;&#123;&#123; GetAllInterfaces | include \&quot;network\&quot; \&quot;10.2.0.0/16\&quot; | attr \&quot;address\&quot;&#125;&#125;&quot;,</span><br><span class="line">  &quot;client_addr&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">  &quot;bootstrap_expect&quot;: 2,</span><br><span class="line">  &quot;raft_protocol&quot;: 3,</span><br><span class="line">  &quot;protocol&quot;: 3,</span><br><span class="line">  &quot;retry_join&quot;: [&quot;provider=aws tag_key=Role tag_value=consul&quot;],</span><br><span class="line">  &quot;ui&quot;: true,</span><br><span class="line">  &quot;dns_config&quot;: &#123;&quot;service_ttl&quot;:</span><br><span class="line"> &#123;&quot;*&quot;: &quot;1s&quot;,</span><br><span class="line"> &quot;redis&quot;: &quot;300s&quot;&#125;,</span><br><span class="line"> &quot;enable_truncate&quot;: true,</span><br><span class="line"> &quot;only_passing&quot;:true&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>docker 以 server 模式启动 consul</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--name=consul-server \</span><br><span class="line">--net=host \</span><br><span class="line">-e AWS_ACCESS_KEY_ID=xxxx \</span><br><span class="line">-e AWS_SECRET_ACCESS_KEY=yyyy \</span><br><span class="line">-e SERVICE_IGNORE=true \</span><br><span class="line">-v /etc/flybear/consul_server:/consul/config \</span><br><span class="line">--restart=always -d consul:1.0.2 agent -server -bootstrap-expect=1 -node=server-1</span><br></pre></td></tr></table></figure>
+
+<p>其中，<br><code>-bootstrap-expect=1</code> 在单节点部署时必须加上，可以选举自己为 leader 节点。如果有多台 server 服务器则可不加<br><code>-node</code> 在集群部署时必须，单节点可不加</p>
+<p>使用 <code>docker ps</code>查看启动情况</p>
+<p><img src="Cluster%20deployment/1.png" alt></p>
+<p>已经成功启动，使用 <code>docker exec consul-server consul members</code>查看集群</p>
+<p><img src="Cluster%20deployment/2.png" alt></p>
+<p>目前只有一个 server 节点。使用<code>docker exec consul-server consul info</code>查看当前节点信息</p>
+<p><img src="Cluster%20deployment/3.png" alt></p>
+<p>可以看到被选举为 leader 节点</p>
+<h3 id="consul-client-部署"><a href="#consul-client-部署" class="headerlink" title="consul client 部署"></a>consul client 部署</h3><p>登录服务器10.2.26.88，在<code>/etc/consul_client/</code>目录下创建配置文件 basic_config.json，写入配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;leave_on_terminate&quot;: true,</span><br><span class="line">  &quot;enable_script_checks&quot;: true,</span><br><span class="line">  &quot;bind_addr&quot;: &quot;&#123;&#123; GetAllInterfaces | include \&quot;network\&quot; \&quot;10.2.0.0/16\&quot; | attr \&quot;address\&quot;&#125;&#125;&quot;,</span><br><span class="line">  &quot;client_addr&quot;: &quot;0.0.0.0&quot;,</span><br><span class="line">  &quot;retry_join&quot;: [&quot;provider=aws tag_key=Role tag_value=consul&quot;],</span><br><span class="line">  &quot;ui&quot;: true,</span><br><span class="line">  &quot;raft_protocol&quot;: 3,</span><br><span class="line">  &quot;protocol&quot;: 3,</span><br><span class="line">  &quot;dns_config&quot;: &#123;&quot;service_ttl&quot;:</span><br><span class="line"> &#123;&quot;*&quot;: &quot;1s&quot;,</span><br><span class="line">  &quot;redis&quot;: &quot;300s&quot;&#125;,</span><br><span class="line"> &quot;enable_truncate&quot;: true,</span><br><span class="line"> &quot;only_passing&quot;:true&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>docker 以 client 模式启动 consul</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--name=consul-client \</span><br><span class="line">--net=host \</span><br><span class="line">-e AWS_ACCESS_KEY_ID=xxxx \</span><br><span class="line">-e AWS_SECRET_ACCESS_KEY=yyyy \</span><br><span class="line">-e SERVICE_IGNORE=true \</span><br><span class="line">-v /etc/flybear/consul_server:/consul/config \</span><br><span class="line">--restart=always -d consul:1.0.2 agent -retry-join=10.2.26.83 -node=client-1</span><br></pre></td></tr></table></figure>
+
+<p>加入之前的 server，<code>docker ps</code>查看启动成功后，执行<code>docker exec consul-client consul members</code></p>
+<p><img src="Cluster%20deployment/4.png" alt></p>
+<p>已经成功加入集群</p>
+<h3 id="Registrator-部署"><a href="#Registrator-部署" class="headerlink" title="Registrator 部署"></a>Registrator 部署</h3><p>执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--name=registrator \</span><br><span class="line">--net=host \</span><br><span class="line">-v /var/run/docker.sock:/tmp/docker.sock \</span><br><span class="line">--restart=always -d registrator -ip &quot;10.2.26.88&quot; -explicit --deregister-on-stop consul://localhost:8500</span><br></pre></td></tr></table></figure>
+
+<p><code>-ip</code> 指定本机 ip，用于 consul 的健康检查</p>
+<h3 id="Fabio-部署"><a href="#Fabio-部署" class="headerlink" title="Fabio 部署"></a>Fabio 部署</h3><p>虽然 fabio 可以零配置，但也可以自定指定一些想要的配置。在<code>/etc/fabio/</code>目录下创建配置文件<code>fabio.properties</code>，写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">proxy.addr = :4666,:3021;proto=tcp</span><br><span class="line">proxy.strategy = rr</span><br><span class="line">registry.consul.addr = localhost:8500</span><br><span class="line">registry.consul.register.enabled = false</span><br><span class="line">metrics.statsd.addr = localhost:8125</span><br><span class="line">log.level = ERROR</span><br></pre></td></tr></table></figure>
+
+<p>然后使用 docker 启动 Fabio</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line"> --name=fabio \</span><br><span class="line"> --net=host \</span><br><span class="line"> -e SERVICE_9998_NAME=fabio \</span><br><span class="line"> -e SERVICE_9999_IGNORE=true \</span><br><span class="line"> -e SERVICE_3021_IGNORE=true \</span><br><span class="line"> -e SERVICE_4666_IGNORE=true \</span><br><span class="line"> -v /etc/fabio/fabio.properties:/etc/fabio.properties:rw \</span><br><span class="line"> --restart=always -d fabiolb/fabio:1.5.2-go1.9 \</span><br><span class="line"> ./fabio -cfg /etc/fabio.properties</span><br></pre></td></tr></table></figure>
+
+<p>访问集群中任意一台服务的8500端口，查看 consul的可视化页面。</p>
+<p><img src="Cluster%20deployment/5.png" alt></p>
+<p>可以看到 registrator 已经自动将 fabio 注册到 consul 了</p>
+<h3 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h3><p>从 docker 拉取服务镜像，使用 docker 部署</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">docker run --init -d --net=host \</span><br><span class="line">-v /logs/flybear-api/logs:/logs \</span><br><span class="line">-v /etc/flybear/keyfile_dev.json:/etc/keyfile_dev.json \</span><br><span class="line">-v /etc/flybear/tl-apns-ent-test.p12:/etc/tl-apns-ent.p12 \</span><br><span class="line">-v /home/ubuntu/apollo:/opt/data \</span><br><span class="line">-e SERVICE_NAME=flybearapi \</span><br><span class="line">-e SERVICE_TAGS=&apos;urlprefix-/services/flybearapi strip=/services/flybearapi&apos; \</span><br><span class="line">-e SERVICE_CHECK_HTTP=&apos;/healthy&apos; \</span><br><span class="line">-e SERVICE_CHECK_INTERVAL=&apos;15s&apos; \</span><br><span class="line">-e SERVICE_CHECK_TIMEOUT=&apos;1s&apos; \</span><br><span class="line">-e SERVICE_80_CHECK_HTTP=/ \</span><br><span class="line">--name=flybearapi \</span><br><span class="line">--restart=always flybear/flybear-api-snapshot:0.0.4-SNAPSHOT \</span><br><span class="line">java \</span><br><span class="line">-server \</span><br><span class="line">-XX:+UseG1GC \</span><br><span class="line">-Xms512M -Xmx512M \</span><br><span class="line">-Xloggc:/logs/gc-`date +%F_%H-%M-%S`.log \</span><br><span class="line">-XX:+PrintGCDetails \</span><br><span class="line">-XX:+PrintGCDateStamps \</span><br><span class="line">-XX:+PrintGCTimeStamps \</span><br><span class="line">-XX:+PrintGCCause \</span><br><span class="line">-XX:-PrintTenuringDistribution \</span><br><span class="line">-XX:+UseGCLogFileRotation \</span><br><span class="line">-XX:NumberOfGCLogFiles=5 \</span><br><span class="line">-XX:GCLogFileSize=2M \</span><br><span class="line">-XX:+HeapDumpOnOutOfMemoryError \</span><br><span class="line">-Dcom.sun.management.jmxremote \</span><br><span class="line">-Dcom.sun.management.jmxremote.host=127.0.0.1 \</span><br><span class="line">-Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.port=9099 \</span><br><span class="line">-Dcom.sun.management.jmxremote.authenticate=false \</span><br><span class="line">-Dcom.sun.management.jmxremote.ssl=false \</span><br><span class="line">-Dspring.boot.admin.client.enabled=true \</span><br><span class="line">-Xdebug \</span><br><span class="line">-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 \</span><br><span class="line">-jar \</span><br><span class="line">target/app.jar</span><br></pre></td></tr></table></figure>
+
+<p>指定了注册到 consul 的 name 和 tag 等信息。等待部署完成后到 consul 页面查看</p>
+<p><img src="Cluster%20deployment/6.png" alt></p>
+<p>健康检查通过，服务成功注册。再访问9998端口查看 fabio 的页面</p>
+<p><img src="Cluster%20deployment/7.png" alt></p>
+<p>Fabio 已经根据 tag 进行了 url 的切分</p>
+<h3 id="Nginx-配置"><a href="#Nginx-配置" class="headerlink" title="Nginx 配置"></a>Nginx 配置</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> fabio &#123;</span><br><span class="line">    <span class="attribute">server</span> <span class="number">127.0.0.1:4666</span> max_fails=<span class="number">0</span> fail_timeout=<span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="attribute">upstream</span> webservers &#123;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">172.31.0.1:8080</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">172.31.0.2:8080</span>;</span><br><span class="line">        <span class="attribute">server</span> <span class="number">172.31.0.3:8080</span>;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">gzip_types</span>      application/json;</span><br><span class="line">    <span class="attribute">gzip_proxied</span>    <span class="literal">no</span>-cache <span class="literal">no</span>-store private expired auth;</span><br><span class="line">    <span class="attribute">gzip_min_length</span> <span class="number">1000</span>;</span><br><span class="line">    <span class="attribute">server_name</span> flybear.com;</span><br><span class="line">    <span class="attribute">access_log</span> /var/log/nginx/host/access.log combined_plus;</span><br><span class="line">    <span class="attribute">error_log</span>  /var/log/nginx/host/error.log <span class="literal">error</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> /internal &#123;</span><br><span class="line">        <span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">        <span class="attribute">log_not_found</span> <span class="literal">off</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://fabio;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> = /test &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://webservers;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以控制内部接口不允许公开访问，将一些特殊地址转向特定服务器等</p>
+
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+        <li>
+            <a target="_blank" href="https://www.zhihu.com/people/qing-meng-xing-he-72-55">
+                            <span class="fa-stack fa-lg">
+                                 <i class="iconfont icon-zhihu"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/fly-bear">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/yazakura.model.json"},"display":{"position":"right","width":300,"height":600,"right":-20,"bottom":-100,"hOffset":-40,"vOffset":-100},"mobile":{"show":true},"log":false});</script></body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script type="text/javascript">
+       (function() {
+           if (typeof LivereTower === 'function') { return; }
+
+           var j, d = document.getElementById('lv-container');
+
+           d.setAttribute('data-id','city');
+           d.setAttribute('data-uid' , 'MTAyMC80NTQyOS8yMTk0MQ==');
+
+           j = document.createElement('script');
+           j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+           j.async = true;
+
+           d.appendChild(j);
+       })();
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+</html>
