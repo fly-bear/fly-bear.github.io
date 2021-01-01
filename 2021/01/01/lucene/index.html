@@ -176,7 +176,7 @@
 </ol>
 <p>实际应用的统计分词系统都使用一个基本的常用词词典，把字典分词和统计分词结合使用。基于统计的方法能很好 地解决词典未收录新词的处理问题，即将中文分词中的串频统计和串匹配结合起来，既发挥匹配分词切分速度快、效率高的特点，有利用了无词典分词结合上下文识 别生词、自动消除歧义的优点。</p>
 <h4 id="Lucene中的分词器"><a href="#Lucene中的分词器" class="headerlink" title="Lucene中的分词器"></a>Lucene中的分词器</h4><p><strong>1. StopAnalyzerStopAnalyzer</strong><br>能过滤词汇中的特定字符串和词汇，并且完成大写转小写的功能。<br><strong>2. StandardAnalyzer</strong><br>根据空格和符号来完成分词，还可以完成数字、字母、 E-mail 地址、 IP 地址以及中文字符的分析处理，还可以支持过滤词表，用来代替 StopAnalyzer 能够实现的过滤功能。<br><strong>3. SimpleAnalyzer</strong><br>具备基本西文字符词汇分析的分词器，处理词汇单元时，以非字母字符作为分割符号。分词器不能做词汇的过滤，之进行词汇的分析和分割。输出地词汇单元完成小写字符转换，去掉标点符号等分割符。在全文检索系统开发中，通常用来支持西文符号的处理，不支持中文。由于不完成单词过滤功能，所以不需要过滤词库支持。词汇分割策略上简单，使用非英文字符作为分割符，不需要分词词库的支持。<br><strong>4. WhitespaceAnalyzer</strong><br>使用空格作为间隔符的词汇分割分词器。处理词汇单元的时候，以空格字符作为分割符号。分词器不做词汇过滤，也不进行小写字符转换。实际中可以用来支持特定环境下的西文符号的处理。由于不完成单词过滤和小写字符转换功能，也不需要过滤词库支持。词汇分割策略上简单使用非英文字符作为分割符，不需要分词词库支持。<br><strong>5. KeywordAnalyzer</strong><br>把整个输入作为一个单独词汇单元，方便特殊类型的文本进行索引和检索。针对邮政编码，地址等文本信息使用关键词分词器进行索引项建立非常方便<br><strong>6. CJKAnalyzer</strong><br>内部调用 CJKTokenizer 分词器，对中文进行分词，同时使用 StopFilter 过滤器完成过滤功能，可以实现中文的多元切分和停用词过滤。在 Lucene3.0 版本中已经弃用<br><strong>7. ChineseAnalyzer</strong><br>功能与 StandardAnalyzer 分析器在处理中文是基本一致，都是切分成单个的双字节中文字符。在 Lucene3.0 版本中已经弃用。<br><strong>8. PerFieldAnalyzerWrapper</strong><br>功能主要用在针对不同的 Field 采用不同的 Analyzer 的场合。比如对于文件名，需要使用 KeywordAnalyzer ，而对于文件内容只使用 StandardAnalyzer 就可以了。通过 addAnalyzer() 可以添加分类器。<br><strong>9. IKAnalyzer</strong><br>实现了以词典为基础的正反向全切分，以及正反向最大匹配切分两种方法。 IKAnalyzer 是第三方实现的分词器，继承自 Lucene 的 Analyzer 类，针对中文文本进行处理。<br><strong>10. JE-Analysis</strong><br>JE-Analysis 是 Lucene 的中文分词组件，需要下载。<br><strong>11. ICTCLAS4Jictclas4j 中文分词系统</strong><br>是 sinboy 在中科院张华平和刘群老师的研制的 FreeICTCLAS 的基础上完成的一个 java 开源分词项目，简化了原分词程序的复杂度，旨在为广大的中文分词爱好者一个更好的学习机会。<br><strong>12. Imdict-Chinese-Analyzer</strong><br>是 imdict 智能词典 的智能中文分词模块，算法基于隐马尔科夫模型 (Hidden Markov Model, HMM) ，是中国科学院计算技术研究所的 ictclas 中文分词程序的重新实现（基于 Java ），可以直接为 lucene 搜索引擎提供简体中文分词支持。<br><strong>13. Paoding Analysis</strong><br>Paoding Analysis 中文分词具有极 高效率 和 高扩展性 。引入隐喻，采用完全的面向对象设计，构思先进。 其效率比较高，在 PIII 1G 内存个人机器上， 1 秒可准确分词 100 万汉字。 采用基于不限制个数的词典文件对文章进行有效切分，使能够将对词汇分类定义。 能够对未知的词汇进行合理解析。<br><strong>14. MMSeg4J</strong><br>mmseg4j 用 Chih-Hao Tsai 的 MMSeg 算法 实现的中文分词器，并实现 lucene 的 analyzer 和 solr 的 TokenizerFactory 以方便在 Lucene 和 Solr 中使用。 MMSeg 算法有两种分词方法： Simple 和 Complex ，都是基于正向最大匹配。 Complex 加了四个规则过虑。官方说：词语的正确识别率达到了 98.41% 。 mmseg4j 已经实现了这两种分词算法。</p>
-<h2 id="Lucene核心内容"><a href="#Lucene核心内容" class="headerlink" title="Lucene核心内容"></a>Lucene核心内容</h2><h3 id="Lucene-组织结构"><a href="#Lucene-组织结构" class="headerlink" title="Lucene 组织结构"></a>Lucene 组织结构</h3><p><img src="lucene/1.png" alt></p>
+<h2 id="Lucene核心内容"><a href="#Lucene核心内容" class="headerlink" title="Lucene核心内容"></a>Lucene核心内容</h2><h3 id="Lucene-组织结构"><a href="#Lucene-组织结构" class="headerlink" title="Lucene 组织结构"></a>Lucene 组织结构</h3><p><img src="1.png" alt></p>
 <p> 从图中可以看出，Lucene主要由基础结构封装，索引核心以及对外接口组成，其中索引核心是整个系统的重点。</p>
 <p> Lucene的系统设计充分考虑了模块之间的低耦合性，使得其实现更容易理解，也易于扩展。Lucene 一般是作为一个运行库被包含进应用中，而不是以单独的索引服务存在，这也是 Elasticsearch 产生的意义。</p>
 <h3 id="Field（域）的概念"><a href="#Field（域）的概念" class="headerlink" title="Field（域）的概念"></a>Field（域）的概念</h3><p>获取原始内容的目的是为了建立索引，在索引前需要将原始内容创建成文档（Document），文档中包括一个一个的域（Field），域（field）在lucene中就是用于搜索和存储分词后的内容，我们在搜索时就是通过域进行的。</p>
@@ -202,7 +202,7 @@
 <li>执行查询（从索引库中查询）</li>
 <li>获取查询结果，并将结果返回给用户</li>
 </ol>
-<p><img src="lucene/2.png" alt></p>
+<p><img src="2.png" alt></p>
 <p>上图反映了 Lucene 中数据流的流向，图中存在4种数据流：文本流、token流、字节流与查询语句对象流。</p>
 <ul>
 <li>文本流用以表示将要索引的文件以及向用户输出信息，在Lucene中采用UCS-2编码，以适应多种语言文字处理</li>
@@ -221,11 +221,11 @@
 <li>String，动态长度，至少2字节，由VInt和Chars组成的字符串类型，VInt表示Chars的长度</li>
 </ol>
 <p>以上的数据类型都是以Byte为基础定义的，因此与平台无关。</p>
-<h3 id="Lucene-索引文件结构"><a href="#Lucene-索引文件结构" class="headerlink" title="Lucene 索引文件结构"></a>Lucene 索引文件结构</h3><p><img src="lucene/3.png" alt></p>
+<h3 id="Lucene-索引文件结构"><a href="#Lucene-索引文件结构" class="headerlink" title="Lucene 索引文件结构"></a>Lucene 索引文件结构</h3><p><img src="3.png" alt></p>
 <p>Lucene 索引由若干段（segment）组成，每一段由若干域（field）组成，每个域由若干项（term）组成。</p>
 <p>项是最小的索引单位，它代表一个字符串以及其在文件中的位置、出现频次等信息。域是一个关联的元组，由一个域名和一个域值组成，域名是一个字符串，域值是一个项。文档是提取了某个文件中所有信息之后的结果，这些组成了段，或称为一个子索引。子索引可以组合为索引，也可以合并为一个新的子索引。</p>
 <p>从结构上来看，索引被处理为一个目录，其中含有的所有文件即为其内容，这些文件按照所属的段不同分组存放，同组的文件拥有相同的文件名，不同的扩展名。此外还有三个文件segments、deletable和lock，分别用于保存所有段的记录、保存已删除文件的记录以及控制读写的同步。</p>
-<p><img src="lucene/4.png" alt></p>
+<p><img src="4.png" alt></p>
 <p>每个段的文件中，主要记录了两大类信息：域集合与项集合。域集合与项集合中的文件组采用了一种类似的存储方法：一个小型的索引文件运行时载入内存，一个对应于索引文件的实际信息文件可以按照索引记录的偏移量随机访问。</p>
 <h3 id="Lucene索引构建模块"><a href="#Lucene索引构建模块" class="headerlink" title="Lucene索引构建模块"></a>Lucene索引构建模块</h3><p>这部分还在啃……之后更新吧</p>
 
